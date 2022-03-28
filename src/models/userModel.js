@@ -22,7 +22,9 @@ const userSchema = new mongoose.Schema({
          }
          },
 
-    password:{  type: String, required: true,  minlength:8, maxlength:15},
+         password:{  type: String, required: true, match:[/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Min length shd be 8 and max length shd be 15']
+
+        },
 
 
     address: {

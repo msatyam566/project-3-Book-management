@@ -5,19 +5,30 @@ const jwt = require("jsonwebtoken")
 const userCreate = async function (req, res) {
     try {
         let data = req.body;
-        const { email } = req.body
+        const {email,phone,password,title} = req.body
+
         if (Object.entries(data).length == 0) {
-            res.status(400).send({ status: false, msg: "please provide some data" })
+           return res.status(400).send({ status: false, msg: "please provide some data" })
         }
+
+        const isValidTitle=function(title){
+            return ['Mr','Mrs','Miss'].indexOf(title) !==-1
+        }
+        
         const isValidEmail = emailValidator.isEmail(email)
         if (!isValidEmail) {
             return res.status(400).send({ status: false, msg: " invalid email" })
         }
         
-        if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test(phone))) {
+        if (!(/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/.test( phone))) {
             return res.status(400).send({ status: false, msg: " enter valid no." })
 
-        }
+       }
+       let isValidPass= /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/.test(password)
+       if(!isValidPass){
+           return res.status(400).send({ status: false, msg: "please provide valid password" })
+       }    
+
 
         else {
             let title = req.body.title
@@ -87,13 +98,15 @@ const userLogin = async function(req,res){
          
          let token = jwt.sign({
               userId: user._id,
-              email :username
-              
-            },
+              email :username,
+              iat : Math.floor(Date.now() / 1000),
+              exp : Math.floor(Date.now() / 1000) + 10*60*60 
+
+            },"Stack",{expiresIn:"1800s"},
             "project-3"
             );
             res.setHeader("y-api-key",token);
-          res.status(201).send({status: true,msg:'sucess', data: token})
+          res.status(201).send({status: true,msg:'sucess', data: {token}})
          
     }
     catch (err) {
