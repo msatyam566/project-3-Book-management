@@ -13,6 +13,7 @@ const userCreate = async function (req, res) {
 
         const isValidTitle=function(title){
             return ['Mr','Mrs','Miss'].indexOf(title) !==-1
+            
         }
         
         const isValidEmail = emailValidator.isEmail(email)

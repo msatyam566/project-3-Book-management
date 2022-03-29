@@ -33,3 +33,7 @@ const reviewSchema = new mongoose.Schema({
         default: false
     }
 })
+
+
+
+module.exports = mongoose.model('reviews', userSchema)
