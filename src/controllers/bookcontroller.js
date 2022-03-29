@@ -3,18 +3,24 @@ const jwt = require("jsonwebtoken")
 
 
 const bookCreate = async function (req,res){
-    try{
+    try {
         let data = req.body;
-        const {title,ISBN} = req.body
+        const { title, ISBN, userId } = req.body
 
         if (Object.entries(data).length == 0) {
             return res.status(400).send({ status: false, msg: "please provide some data" })
-         }
+        }
 
          else {
             let title = req.body.title
             if (!title)
                 return res.status(400).send({ status: false, msg: " enter valid title" })
+
+                let trimname =title.trim()
+                if(!(/^(\w+\s)*\w+$/.test(trimname))){
+                    return res.status(400).send({ status: false, msg: "Please give a valid title without space" })
+            
+                }
 
             let excerpt = req.body.excerpt
             if (!excerpt)
@@ -24,41 +30,63 @@ const bookCreate = async function (req,res){
             if (!userId)
                 return res.status(400).send({ status: false, msg: "enter valid userId" })
 
+            if (!isValidObjectId(userId)) {
+                res.status(400).send({ status: false, message: `${userId} is not a valid user id` })
+                return
+            }
+
+
+
             let ISBN = req.body.ISBN
-            if (!ISBN)
+            if (!ISBN){
                 return res.status(400).send({ status: false, msg: "please provide ISBN" })
 
+            }
             let category = req.body.category
             if (!category)
-                return res.status(400).send({ status: false, msg: "please provide category" })
+               { return res.status(400).send({ status: false, msg: "please provide category" })}
 
             let subcategory = req.body.subcategory
             if (!subcategory)
-                return res.status(400).send({ status: false, msg: "please provide subcategory" })
-             let reviews = req.body.reviews
+               { return res.status(400).send({ status: false, msg: "please provide subcategory" })}
+
+            let reviews = req.body.reviews
             if (!reviews)
-                return res.status(400).send({ status: false, msg: "please provide reviews" })
+               { return res.status(400).send({ status: false, msg: "please provide reviews" })}
 
 
-                let validtitle = await bookModel.findOne({ title })
-                if (validtitle) {
-                    return res.status(401).send({ status: false, msg: " title already exist" })
-                }
-    
-                let validISBN = await bookModel.findOne({ ISBN })
-                if (validISBN) {
-                    return res.status(401).send({ status: false, msg: "ISBN already exist" })
-                }
-                let savedData = await bookModel.create(data)
-            return res.status(201).send({ status: true, msg: savedData });
+            let validtitle = await bookModel.findOne({ title })
+            if (validtitle) {
+                return res.status(401).send({ status: false, msg: " title already exist" })
+            }
+
+            let validISBN = await bookModel.findOne({ ISBN })
+            if (validISBN) {
+                return res.status(401).send({ status: false, msg: "ISBN already exist" })
+            }
+
+        
+        let user = await userModel.findOne({ _id: data.userId })
+
+        if (!user) {
+            return res.status(401).send({ status: false, message: 'User does not exit' })
 
         }
+
+       
+        let savedData = await bookModel.create( data )
+        return res.status(201).send({ status: true, msg: savedData });
+        }
+    
     }
     catch (error) {
-        console.log(error)
-        return res.status(500).send({ status: false, msg: error.message })
-    }
+    console.log(error)
+    return res.status(500).send({ status: false, msg: error.message })
 }
+}
+
+
+
 
 
 

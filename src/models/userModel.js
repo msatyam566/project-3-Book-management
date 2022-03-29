@@ -15,11 +15,11 @@ const userSchema = new mongoose.Schema({
 },
 
     email:  { type : String, required:true,
-        validate:{
-           validator:validator.isEmail,
-             message:'{Value} is not a valid email',
-             isAsync: false
-         }
+        // validate:{
+        //    validator:validator.isEmail,
+        //      message:'{Value} is not a valid email',
+        //      isAsync: false
+        //  }
          },
 
          password:{  type: String, required: true, match:[/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, 'Min length shd be 8 and max length shd be 15']
