@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     phone: {type : String, required: true, unique: true,match : [/^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$/, 'please provide valid mobile number']
 },
 
-    email:  { type : String, required:true,
+    email:  { type : String, required:true, unique:true
         // validate:{
         //    validator:validator.isEmail,
         //      message:'{Value} is not a valid email',
