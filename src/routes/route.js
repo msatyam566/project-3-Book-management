@@ -15,9 +15,9 @@ router.post("/loginuser", usercontroller.userLogin)
 
 //-----------Books-----------//
 router.post("/createBook",auth.authentication,bookcontroller.bookCreate)
-router.get("/getBooks",auth.authentication,bookcontroller.getBook)
+router.get("/getBooks",bookcontroller.getBook)
 router.get("/books/:bookId",auth.authentication,bookcontroller.getBookbyId)
-router.put("/books/:bookId",auth.authentication,bookcontroller.updateBooksbyId)
+router.put("/books/:bookId",auth.authentication,bookcontroller.bookUpdate)
 router.delete("/books/:bookId",auth.authentication,bookcontroller.deletebyid)
 
 //-----------review-----------//

@@ -11,15 +11,13 @@ const isValidTitle=function(title){
 const userCreate = async function (req, res) {
     try {
         let data = req.body;
-        let queryParams = req.query
-        const { email } = req.body
-        // const { phone } = req.body
+        const { email, } = req.body
+        
 
         if (Object.keys(data).length == 0) {
             return res.status(400).send({ status: false, msg: "please provide some data" })
         }
-    
-        
+
         
         let title = req.body.title
         if (!title){
@@ -98,7 +96,7 @@ const userCreate = async function (req, res) {
 
 
 const userLogin = async function (req, res) {
-   try{
+    try{
         let data =req.body;
         if(Object.keys(data).length==0){
             return  res.status(400).send({status:false,msg:"kindly pass Some Data"})
@@ -109,6 +107,12 @@ const userLogin = async function (req, res) {
         if(!username){
            return res.status(400).send({ status: false, msg: " Email is required" })
        }
+
+       const isValidEmail = emailValidator.isEmail(username)
+       if (!isValidEmail) {
+        return res.status(400).send({ status: false, msg: " invalid email" })
+   }
+
        
         if (!password){
        return res.status(400).send({ status: false, msg: "Password is required" })
@@ -116,7 +120,7 @@ const userLogin = async function (req, res) {
 
         let user = await userModel.findOne({email: username, password: password});
         if(!user)
-            return res.status(400).send({
+            return res.status(401).send({
                status : false,
                msg:"username or password are not matching",
             });
@@ -135,6 +139,7 @@ const userLogin = async function (req, res) {
       res.status(500).send({ Error: err.message })
    }
 }
+
 
 module.exports.userCreate = userCreate
 module.exports.userLogin = userLogin
